@@ -6,13 +6,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://d3js.org/d3.v3.min.js"></script>
   <title>Visualize Data with a Bar Chart</title>
+
+  <style>
+    .chartContainer {
+      height: 560px;
+      width: 900px;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 20px 20px 20px;
+      align-self: center;
+      position: relative;
+    }
+
+    #title {
+      font-size: 2.5rem;
+    }
+  </style>
 </head>
 <body>
+
+  <div class="chartContainer">
+    <div id="title">United States GDP</div>
+  </div>
   <script>
 
+      const width = 500;
+      const height = 800;
 
-      d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json")
-        .then()
+      
+      var svgContainer = d3.select("body")
+        .append("svgdMain")
+        .attr("width", width)
+        .attr("height", height)
+        .style("background", "white")
+
+        .append("div")
+        .attr("id", "title")
+        .text("United Stats GDP")
+        .attr("text-align", "center")
+        .attr("font-size", "2.5rem");
+
+        d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json")
+          .then(gdpData => {
+
+          })
 
   </script>
 </body>

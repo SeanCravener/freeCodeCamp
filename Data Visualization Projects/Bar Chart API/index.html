@@ -8,50 +8,72 @@
   <title>Visualize Data with a Bar Chart</title>
 
   <style>
-    .chartContainer {
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .main {
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #708090;
+    }
+
+    .chart-container {
       height: 560px;
       width: 900px;
       background-color: #fff;
       display: flex;
       flex-direction: column;
-      padding: 20px 20px 20px 20px;
+      padding: 1.25rem;
       align-self: center;
       position: relative;
     }
 
     #title {
       font-size: 2.5rem;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .box-shadow {
+      box-shadow: 2px 2px 20px;;
     }
   </style>
+
 </head>
 <body>
 
-  <div class="chartContainer">
-    <div id="title">United States GDP</div>
-  </div>
-  <script>
+  <div class="main">
+    <div class="chart-container box-shadow">
+      <div id="title">United States GDP</div>
+  
+      <script>
 
       const width = 500;
       const height = 800;
-
+      const margin = "1rem";
       
-      var svgContainer = d3.select("body")
-        .append("svgdMain")
+      // Bar chart container
+      var svgContainer = d3
+        .select("chart-container")
+        .append("svg")
         .attr("width", width)
         .attr("height", height)
-        .style("background", "white")
+        .attr("margin", margin);
 
-        .append("div")
-        .attr("id", "title")
-        .text("United Stats GDP")
-        .attr("text-align", "center")
-        .attr("font-size", "2.5rem");
-
-        d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json")
-          .then(gdpData => {
+        d3.json("https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json",
+          gdpData => {
+            
+            svgContainer.
 
           })
 
-  </script>
+      </script>
+    </div>
+  </div>
 </body>
 </html>

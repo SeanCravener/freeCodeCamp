@@ -1,13 +1,14 @@
+// Set dimensions and margins of graph
 const margin = {
     top: 100,
     right: 20,
     bottom: 30,
     left: 60
-}
-
-const width = 920 - margin.left - margin.right,
+    },
+    width = 920 - margin.left - margin.right,
     height = 630 - margin.top - margin.bottom;
 
+// Link for json file
 const jsonURL = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json';
 
 // Scale, set range and domain for X axis
@@ -53,7 +54,7 @@ var svgContainer = d3
     .append('g')
     .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-// Load from from url stored in jsonURL
+// Read json file from url stored in jsonURL
 d3.json(jsonURL)
     .then(data => {
         

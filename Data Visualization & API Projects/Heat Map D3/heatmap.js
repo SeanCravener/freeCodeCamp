@@ -11,6 +11,12 @@ const margin = {
 // Link for json file
 const jsonURL = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json';
 
+// Array for legend colors
+const legendColors = [
+    "red",
+    "blue"
+];
+
 // Append svg object to main-heatmap div element
 var svgContainer = d3
     .select("main-heatmap")
@@ -28,25 +34,40 @@ d3.json(jsonURL)
         return d.year;
     });
 
+    var baseDifference = data.monthlyVariance.map(d => {
+        return d.baseTemperature + d.variance;
+    });
+
     // Scale and set Y axis. Domain for each month of the year
-    var y = d3
+    var y = svgContainer
         .scaleTime()
         .domain([new Date(0,0), new Date(0,11)])
         .range([0, height]);
 
-    var yAxis = d3
+    var yAxis = svgContainer
         .axisLeft(y)
         .tickFormat('%B');
 
-    var x = d3
+    var x = svgContainer
         .scaleTime()
         .domain(heatYears)
         .range([0, width]);
 
-    var xAxis = d3
+    var xAxis = svgContainer
         .axisBottom(x)
         .tickFormat('Y')
-        
+    //    .tickValue()
+
+    svgContainer
+        .append("g")
+
+    var tooltip = 
+
+    // Scale colors for legend
+    var legendScale = d3
+        .scaleThreshold()
+        .domain(d3.extent(baseDifference))
+        .range(legendColors);
     })
     .catch(error => {
         console.log(error)

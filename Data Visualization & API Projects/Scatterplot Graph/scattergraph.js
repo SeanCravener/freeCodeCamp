@@ -84,7 +84,6 @@ d3.json(jsonURL)
         // Create and setup X axis elemnt
         svgContainer
             .append('g')
-            .attr('class', 'axis')
             .attr('id', 'x-axis')
             .attr('transform', 'translate(0,' + height + ')')
             .call(xAxis);
@@ -92,7 +91,6 @@ d3.json(jsonURL)
         // Create Y axis element for chart
         svgContainer
             .append('g')
-            .attr('class', 'axis')
             .attr('id', 'y-axis')
             .call(yAxis);
 

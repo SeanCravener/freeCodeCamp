@@ -2,23 +2,24 @@
 const EDUCATION_FILE = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json";
 const COUNTY_FILE = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json";
 
-const width = 1200,
-    height = 700,
-    margin = {
-        top: 30,
-        right: 40,
-        bottom: 30,
-        left: 60
-    };
+const margin = {
+  top: 20,
+  right: 20,
+  bottom: 20,
+  left: 20
+};
 
-let path = d3.geoPath();
+const width = 960;
+const height = 600;
+
+// Colors array for legend and map
+const colors = d3.schemeYlOrRd[8];
 
 // Append tooltip to div with class "container"
-const tooltip = d3
-    .select(".container")
+const tooltip = d3.select("body")
     .append("div")
     .attr("id", "tooltip")
-    .attr("opacity", 0);
+    .style("visibility", "hidden")
     
 // Append h1 for title to div with class "container"
 const title = d3.select(".container")
@@ -30,150 +31,93 @@ const title = d3.select(".container")
 const description = d3.select(".container")
     .append("h3")
     .attr("id", "description")
-    .text("Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)")
+    .text("Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)");
 
 // Append SVG to div with class "container"
-let svg = d3.select(".container")
+const svg = d3.select(".container")
     .append("svg")
     .attr("id", "choropleth-map")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+const legend = svg.append("g")
+  .attr("id", "legend")
+  .attr("transform", "translate(0,40)")
 
-// let legend = svg
-//     .append('g')
-//     .attr('id', 'legend')
-//     .attr('transform', 'translate(0,40)');
+//using GEOJson library, map and geoPath allow visualization of path array to form map
+const path = d3.geoPath();
   
-
-
 // Read json files. If successful, loads data into choropleth map
 Promise.all([
     d3.json(EDUCATION_FILE),
     d3.json(COUNTY_FILE)
-]).then((userData, countyData) => {
-    
-    // Map of bachelorOrHigher value
-    const bachelorMap = userData.map(d => {
-        return d.bachelorsOrHigher;
+]).then((data) => {
+  const userData = data[0];
+  const countyData = data[1];
+
+  const bachelorMap = userData.map(d => {
+    return d.bachelorsOrHigher;
+  })
+
+  const maxBachelor = d3.max(bachelorMap);
+  const minBachelor = d3.min(bachelorMap);
+
+  let colorScale = d3.scaleThreshold()
+    .domain(d3.range(minBachelor, maxBachelor, (maxBachelor - minBachelor)/colors.length))
+    .range(colors);
+
+  let countyFibMatch = (fips) => {
+    var county = userData.find(county => county.fips === fips);
+    return county;
+  };
+
+  svg
+    .selectAll("path")
+    .data(topojson.feature(countyData, countyData.objects.counties).features)
+    .enter()
+    .append("path")
+    .attr("d", path)
+    .attr("fill", (d) => {
+      let i = colors.indexOf(colorScale(countyFibMatch(d.id).bachelorsOrHigher));
+      return colors[i - 1];
+    })
+    .attr("data-fips", d => d.id)
+    .attr("data-education", d => {
+      return countyFibMatch(d.id).bachelorsOrHigher
+    })
+    .on("mouseover", (event, d) => {
+      let county = countyFibMatch(d.id)
+  
+      tooltip
+        .style("visibility", "visible")
+        .style("left", (event.pageX + 5) + "px")
+        .style("top", (event.pageY - 80) + "px")
+        .attr("data-education", county.bachelorsOrHigher)
+        // Add text with selected county data to tooltip
+        .html(
+          "County: " +
+          county.area_name +
+          "<br>" +
+          "State: " +
+          county.state +
+          "<br>" +
+          "Bachelors or Higher: " +
+          county.bachelorsOrHigher +
+          "%"
+        );
+    })
+    .on("mouseout", () => {
+      tooltip.style("visibility", "hidden")
     });
-
-    // set up color scale range
-    let color = d3
-        .scaleSequential(d3.interpolateYlGnBu)
-        .domain(d3.extent(bachelorMap));
-
-    // const x = d3    
-    //     .scaleLinear()
-    //     .domain(d3.extent(bachelorMap))
-    //     .rangeRound([600, 860]);
-
-    // legend
-    //     .selectAll('rect')
-    //     .data(
-    //         color.range().map( d => {
-    //             d = color.invertExtent(d);
-    //             if (d[0] === null) {
-    //                 d[0] = x.domain()[0];
-    //             }
-    //             if (d[1] === null) {
-    //                 d[1] = x.domain()[1];
-    //             }
-    //             return d;
-    //         })
-    //     )
-    //     .enter()
-    //     .append('rect')
-    //     .attr('height', 8)
-    //     .attr('x', (d => {
-    //         return x(d[0]);
-    //     }))
-    //     .attr('width', (d => {
-    //         return d[0] && d[1] ? x(d[1]) - x(d[0]) : x(null);
-    //     }))
-    //     .attr('fill', (d => {
-    //         return color(d[0]);
-    //     }));
   
-    // legend.append('text')
-    //     .attr('class', 'caption')
-    //     .attr('x', x.range()[0])
-    //     .attr('y', -6)
-    //     .attr('fill', '#000')
-    //     .attr('text-anchor', 'start')
-    //     .attr('font-weight', 'bold');
-  
-    // legend.call(
-    //     d3.axisBottom(x)
-    //         .tickSize(13)
-    //         .tickFormat(x => {
-    //             return Math.round(x) + '%';
-    //     })
-    //     .tickValues(color.domain())
-    // )
-    // .select('.domain')
-    // .remove();
+  // Add space between states
+  svg.append("path")
+    .datum(topojson.mesh(countyData, countyData.objects.states))
+    .attr("class", "state")
+    .attr("d", path);
 
 
-    svg.append("g")
-        .selectAll("path")
-        .data(topojson.feature(countyData, countyData.objects.counties).features)
-        .enter()
-        .append("path")
-        .attr("class", "county")
-        .attr("data-fips", d => d.id)
-        .attr("data-education", d => {
-          let object = userData.filter(item => item.fips == d.id);
-          return object[0] ? object[0].bachelorsOrHigher : 0;
-        })
-        .attr("fill", d => {
-          let object = userData.filter(item => item.fips == d.id);
-          return object[0] ? color(object[0].bachelorsOrHigher) : color(0);
-        })
-        .attr("d", path)
-        .on("mouseoover", (event, d) => {
-            tooltip.transition().duration(200).style('opacity', 0.9);
-            tooltip
-                .html(() => {
-                    let result = userData.filter(function (obj) {
-                      return obj.fips === d.id;
-                    });
-                    if (result[0]) {
-                      return (
-                        result[0]['area_name'] +
-                        ', ' +
-                        result[0]['state'] +
-                        ': ' +
-                        result[0].bachelorsOrHigher +
-                        '%'
-                      );
-                    }
-                    return 0;
-                })
-                .attr('data-education', function () {
-                    let result = userData.filter(function (obj) {
-                      return obj.fips === d.id;
-                    });
-                    if (result[0]) {
-                      return result[0].bachelorsOrHigher;
-                    }
-                    // could not find a matching fips id in the data
-                    return 0;
-                  })
-                    .style('left', event.pageX + 'px')
-                    .style('top', event.pageY - 28 + 'px');
-        })
-        // Transition on mouseout event
-        .on('mouseout', () => {
-            tooltip.transition().duration(200).style('opacity', 0);
-        });
-
-    svg.append('path')
-        .datum(
-          topojson.mesh(countyData, countyData.objects.states, function (a, b) {
-            return a !== b;
-          })
-        )
-        .attr('class', 'states')
-        .attr('d', path);
 })
 .catch(error => {
     // Catch error and print error to console

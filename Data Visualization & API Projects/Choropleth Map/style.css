@@ -10,7 +10,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #8ac1f7;
+    background-color: white;
   }
 
 .container {
@@ -18,7 +18,7 @@ body {
 }
 
 .state {
-  stroke: black;
+  stroke: white;
   stroke-width: 1px;
   fill: none;
 }

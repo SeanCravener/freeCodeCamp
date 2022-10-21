@@ -1,3 +1,4 @@
+
 // Assign User Education and County data json files
 const EDUCATION_FILE = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/for_user_education.json";
 const COUNTY_FILE = "https://cdn.freecodecamp.org/testable-projects-fcc/data/choropleth_map/counties.json";
@@ -64,8 +65,43 @@ Promise.all([
   const minBachelor = d3.min(bachelorMap);
 
   let colorScale = d3.scaleThreshold()
-    .domain(d3.range(minBachelor, maxBachelor, (maxBachelor - minBachelor)/colors.length))
+    .domain(d3.range(minBachelor, maxBachelor, (maxBachelor - minBachelor) / colors.length))
     .range(colors);
+
+  const x = d3.scaleLinear()
+    .domain([minBachelor, maxBachelor])
+    .rangeRound([600, 860]);
+
+  legend.selectAll("rect")
+    .data(colorScale.range().map(d => colorScale.invertExtent(d)))
+    .enter()
+    .append("rect")
+    .attr("height", 8)
+    .attr("x", d => x(d[0]))
+    .attr("width", d => x(d[1]) - x(d[0]))
+    .attr("fill", d => colorScale(d[0]));
+
+  // Add title to legend
+  legend.append("text")
+    .attr("x", x.range()[0])
+    .attr("y", -6)
+    .attr("fill", "#000")
+    .attr("text-anchor", "start")
+    .attr("font-weight", "bold")
+    .text("Bachelor or Higher Rate(%)");
+
+  legend
+    .call(d3.axisBottom(x)
+      .tickSize(13)
+      .tickFormat(x => {
+        return Math.round(x) + "%";
+      })
+      .tickValues(colorScale.range()
+        .slice(1)
+        .map(d => colorScale.invertExtent(d)[0])
+        ))
+    .select(".domain")
+    .remove();
 
   let countyFibMatch = (fips) => {
     var county = userData.find(county => county.fips === fips);
@@ -73,6 +109,7 @@ Promise.all([
   };
 
   svg
+    .append("g")
     .selectAll("path")
     .data(topojson.feature(countyData, countyData.objects.counties).features)
     .enter()
@@ -83,6 +120,7 @@ Promise.all([
       return colors[i - 1];
     })
     .attr("data-fips", d => d.id)
+    .attr("class", "county")
     .attr("data-education", d => {
       return countyFibMatch(d.id).bachelorsOrHigher
     })
@@ -116,6 +154,7 @@ Promise.all([
     .datum(topojson.mesh(countyData, countyData.objects.states))
     .attr("class", "state")
     .attr("d", path);
+
 
 
 })

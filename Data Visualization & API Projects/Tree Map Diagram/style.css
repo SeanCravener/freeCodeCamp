@@ -1,11 +1,35 @@
 * {
     margin: 0;
     padding: 0;
-    overflow: hidden;
   }
   
 body {
     max-width: 100vw;
     height: 100vh;
+    background: #bebebe;
   }
 
+.tm-cont {
+  margin: 1em 1em;
+  padding: 10px;
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 15px 15px 30px #bebebe,
+              -15px -15px 30px #fff;
+  text-align: center;
+}
+
+.tm-style {
+  margin: .5em auto;
+}
+
+.tile-text {
+  cursor: default;
+}
+
+svg {
+  font: 10px sans-serif;
+  text-align: center;
+  display: block;
+  margin: auto;
+}

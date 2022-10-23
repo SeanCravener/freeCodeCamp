@@ -19,6 +19,9 @@ const DATASETS = {
 const width = 960,
     height = 570;
 
+const legendWidth = 500,
+    legendHeight = 300;
+
 const color = [
     '#1f77b4',
     '#aec7e8',
@@ -73,32 +76,34 @@ const dataset = DATASETS[urlParams.get('tm-data') || defaultData];
 
 // Add title to treemap
 container.append('h1')
-        .attr('class', 'tm-style')
-        .attr('id', 'title')
-        .text(dataset.title);
+    .attr('class', 'tm-style')
+    .attr('id', 'title')
+    .text(dataset.title);
 
 // Add description to treemap
 container.append('div')
-        .attr('class', 'tm-style')
-        .attr('id', 'description')
-        .text(dataset.description);
+    .attr('class', 'tm-style')
+    .attr('id', 'description')
+    .text(dataset.description);
 
 const svg = container.append('svg')
     .attr('id', 'treemap')
     .attr('class', 'tm-style')
-    .attr("viewBox", "0 0 960 570");
+    // .attr('width', width)
+    // .attr('height', height)
+    .attr('viewBox', [0, 0, width, height]);
 
-let legendContainer = container.append("div")
-        .attr('id', 'legend')
-        .attr('class', 'tm-style')
-        .attr('viewBox', '0 0 500 250');
+let legendContainer = container.append('div')
+    .attr('id', 'legend')
+    .attr('class', 'tm-style')
+    .attr('viewBox', [0, 0, legendWidth, legendHeight]);
 
 var fader = d => {
     return d3.interpolateRgb(d, '#fff')(0.2);
 }
 
 var colors = d3.scaleOrdinal()
-        .range(color.map(fader));
+    .range(color.map(fader));
 
 var treemap1 = d3.treemap()
     .size([width, height])
@@ -175,32 +180,42 @@ d3.json(dataset.fileURL)
             return self.indexOf(category) === index;
             });
 
+
         let legendBoxSize = 20;
 
-        let legend = legendContainer.append('g')
-            .attr('transform', 'translate(60,' + 10 + ')')
-            .selectAll('g')
+        legendContainer
+            .selectAll('legendrect')
             .data(categories)
             .enter()
-            .append('g')
-            .attr('transform', (d, i) => {
-                return 'translate(0,' + (height / 2 - i * 20) + ')';
-            });
-
-        legend.append('rect')
+            .append('rect')
+            .attr('x', 100)
+            .attr('y', (d, i) => {
+                return 100 + i * (legendBoxSize + 5);
+            })
             .attr('width', legendBoxSize)
             .attr('height', legendBoxSize)
-            .attr('class', 'legend-item')
-            .attr('fill', d => {
-                return colors(d)
+            .style('fill', d => {
+                return colors(d);
             });
+            
 
-        legend.append('text')
-            .attr('x', legendBoxSize + 15)
-            .attr('y', legendBoxSize + 15)
+        legendContainer
+            .selectAll('legendlabel')
+            .data(categories)
+            .enter()
+            .append('text')
+            .attr('x', 100 + size * 1.2)
+            .attr('y', (d, i) => {
+                return 100 + i * (legendBoxSize + 5) + (legendBoxSize / 2);
+            })
+            .style('fill', d => {
+                return colors(d);
+            })
             .text(d => {
                 return d;
-            });
+            })
+            .attr('text-anchor', 'left')
+            .style('alignment-baseline', 'middle');
 
     })
     .catch(error => {

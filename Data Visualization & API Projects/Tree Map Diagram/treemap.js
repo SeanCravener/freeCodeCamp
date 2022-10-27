@@ -19,9 +19,6 @@ const DATASETS = {
 const width = 960,
     height = 570;
 
-const legendWidth = 500,
-    legendHeight = 300;
-
 const color = [
     '#1f77b4',
     '#aec7e8',
@@ -48,7 +45,7 @@ const color = [
 const tooltip = d3.select('body')
     .append('div')
     .attr('id', 'tooltip')
-    .style('visibility', 'hidden');
+    .style('opacity', 0);
 
 const container = d3.select('body')
     .append('div')
@@ -86,17 +83,18 @@ container.append('div')
     .attr('id', 'description')
     .text(dataset.description);
 
-const svg = container.append('svg')
-    .attr('id', 'treemap')
-    .attr('class', 'tm-style')
-    // .attr('width', width)
-    // .attr('height', height)
-    .attr('viewBox', [0, 0, width, height]);
+const svgContainer = container.append('div')
+    .attr('class', 'tm-style');
 
-let legendContainer = container.append('div')
+const svg = svgContainer.append('svg')
+    .attr('id', 'treemap')
+    .attr('width', width)
+    .attr('height', height);
+
+let legendContainer = svgContainer.append('svg')
     .attr('id', 'legend')
-    .attr('class', 'tm-style')
-    .attr('viewBox', [0, 0, legendWidth, legendHeight]);
+    .attr('width', (width / 4))
+    .attr('height', height);
 
 var fader = d => {
     return d3.interpolateRgb(d, '#fff')(0.2);
@@ -105,7 +103,7 @@ var fader = d => {
 var colors = d3.scaleOrdinal()
     .range(color.map(fader));
 
-var treemap1 = d3.treemap()
+var treemap = d3.treemap()
     .size([width, height])
     .paddingInner(1);
 
@@ -122,7 +120,7 @@ d3.json(dataset.fileURL)
                 return b.height - a.height || b.value - a.value;
             });
 
-        treemap1(root);
+        treemap(root);
         
         var cell = svg.selectAll('g')
             .data(root.leaves())
@@ -155,7 +153,29 @@ d3.json(dataset.fileURL)
             })
             .attr('fill', function (d) {
                 return colors(d.data.category);
-            });
+            })
+            .on('mouseover', (event, d) => {
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', 0.9);
+
+                tooltip.html(
+                    'Name: ' +
+                    d.data.name +
+                    '<br>Category: ' +
+                    d.data.category +
+                    '<br>Value: ' +
+                    d.data.value
+                )
+                .attr('data-value', d.data.value)
+                .style('left', event.pageX + 10 + 'px')
+                .style('top', event.pageY - 28 + 'px');
+            })
+            .on('mouseout', () => {
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', 0)
+            })
 
         cell.append('text')
             .attr('class', 'tile-text')
@@ -181,41 +201,28 @@ d3.json(dataset.fileURL)
             });
 
 
-        let legendBoxSize = 20;
+        let legendBoxSize = 15;
 
-        legendContainer
-            .selectAll('legendrect')
+
+        let legend = legendContainer.append('g')
+            .selectAll('g')
             .data(categories)
             .enter()
-            .append('rect')
-            .attr('x', 100)
-            .attr('y', (d, i) => {
-                return 100 + i * (legendBoxSize + 5);
-            })
+            .append('g');
+
+        legend.append('rect')
+            .attr('class', 'legend-item')
             .attr('width', legendBoxSize)
             .attr('height', legendBoxSize)
-            .style('fill', d => {
-                return colors(d);
-            });
-            
+            .attr('x', 20)
+            .attr('y', (d, i) => position = (legendBoxSize + 15) * i)
+            .attr('fill', (d) => colors(d));
 
-        legendContainer
-            .selectAll('legendlabel')
-            .data(categories)
-            .enter()
-            .append('text')
-            .attr('x', 100 + size * 1.2)
-            .attr('y', (d, i) => {
-                return 100 + i * (legendBoxSize + 5) + (legendBoxSize / 2);
-            })
-            .style('fill', d => {
-                return colors(d);
-            })
-            .text(d => {
-                return d;
-            })
-            .attr('text-anchor', 'left')
-            .style('alignment-baseline', 'middle');
+        legend.append('text')
+            .attr('transform', 'translate(0, 10)')
+            .attr('x', 40)
+            .attr('y', (d, i) => (legendBoxSize + 15) * i)
+            .text((d => d));
 
     })
     .catch(error => {

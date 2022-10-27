@@ -6,16 +6,12 @@
 body {
     max-width: 100vw;
     height: 100vh;
-    background: #bebebe;
   }
 
 .tm-cont {
   margin: 1em 1em;
   padding: 10px;
-  border-radius: 30px;
   background: #fff;
-  box-shadow: 15px 15px 30px #bebebe,
-              -15px -15px 30px #fff;
   text-align: center;
 }
 
@@ -30,6 +26,15 @@ body {
 svg {
   font: 10px sans-serif;
   text-align: center;
-  display: block;
-  margin: auto;
+  margin: 0.5em;
+}
+
+#tooltip {
+  position: absolute;
+  padding: 10px;
+  font: 12px Arial;
+  background: #fff;
+  box-shadow: 1px 1px 10px rgba(128, 128, 128, 0.6);
+  border-radius: 2px;
+  pointer-events: none;
 }

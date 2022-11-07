@@ -1,0 +1,18 @@
+header {
+    display: flex;
+    position: fixed;
+  
+  }
+  
+  #header-img {
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  @media (max-width: 300px) {
+    header {
+      display: flex;
+      position: fixed;
+    }
+  }

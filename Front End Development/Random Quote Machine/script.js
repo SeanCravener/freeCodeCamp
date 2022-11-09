@@ -1,22 +1,19 @@
-import React, { useState } from "react";
+// import React from 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';
+// import ReactDOM from 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js'
 
-export default function App() {
+const App = () => {
     const [quote, setQuote] = React.useState(null);
     const API_URL = 'https://api.quotable.io/random';
-    const ERROR_MSG = 'Error retrieving data'
 
     // Function that retrieves random quote from URL and sets quote content if successful.
-    async function quoteUpdate() {
-        try {
-            const response = await fetch(API_URL);
-            const { code, message, ...quote } = await response.json();
-            if (!response.ok) throw new Error('${code} ${message}');
-            setQuote(quote);
-        } catch (error) {
-            // Catch error, display on console and UI.
-            console.error(error);
-            setQuote({ content: ERROR_MSG });
-        }
+    const quoteUpdate = async () => {
+        fetch(API_URL)
+            .then(response => response.json())
+            .then((data) => {
+                console.log(data);
+                setQuote(data);
+            })
+            .catch((error) => console.log(error))
     }
 
     React.useEffect(() => {
@@ -37,7 +34,11 @@ export default function App() {
             <button id='new-quote' onClick={quoteUpdate}>
                 New Quote
             </button>
-            <i class='fa-brands fa-square-twitter'></i>
+            <a href={'https://twitter.com/intent/tweet?hashtags=quotes&text=' + 
+                encodeURIComponent('"' + quote.content + '" ' + quote.author)
+                }>
+                <i className='fa-brands fa-square-twitter'></i>
+            </a>        
         </div>
     )
 

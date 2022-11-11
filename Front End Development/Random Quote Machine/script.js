@@ -1,5 +1,5 @@
-// import React from 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';
-// import ReactDOM from 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js'
+import React from 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';
+import ReactDOM from 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js';
 
 const App = () => {
     const [quote, setQuote] = React.useState(null);
@@ -25,24 +25,27 @@ const App = () => {
 
     return (
         <div className='App' id='quote-box'>
+            <div id='top'>
             <div id='text'>
                 {quote.content}
             </div>
             <div id='author'>
                 - {quote.author}
             </div>
+        </div>
+        <div id='bottom'>
             <button id='new-quote' onClick={quoteUpdate}>
                 New Quote
             </button>
-            <a href={'https://twitter.com/intent/tweet?hashtags=quotes&text=' + 
+            <a id='tweet-quote' target='_top' href={'https://twitter.com/intent/tweet?hashtags=quotes&text=' + 
                 encodeURIComponent('"' + quote.content + '" ' + quote.author)
                 }>
                 <i className='fa-brands fa-square-twitter'></i>
-            </a>        
+            </a>
+        </div>
         </div>
     )
 
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
-

@@ -1,5 +1,5 @@
-import React from 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';
-import ReactDOM from 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js';
+import React from 'react'
+import './style.css'
 
 const App = () => {
     const [quote, setQuote] = React.useState(null);
@@ -40,7 +40,7 @@ const App = () => {
             <a id='tweet-quote' target='_top' href={'https://twitter.com/intent/tweet?hashtags=quotes&text=' + 
                 encodeURIComponent('"' + quote.content + '" ' + quote.author)
                 }>
-                <i className='fa-brands fa-square-twitter'></i>
+                <img src="/square-twitter.svg" className="twitter" alt="Tweet This!" />
             </a>
         </div>
         </div>
@@ -48,4 +48,4 @@ const App = () => {
 
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+export default App

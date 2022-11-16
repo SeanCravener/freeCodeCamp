@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import './style.css';
 
 const drumSamples = [
@@ -14,11 +13,8 @@ const drumSamples = [
     {key: 67, id: 'C', label: 'Closed-HH', fileURL: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3' }
 ]
 
-// Need to create event listener, maybe custom hook
-
 const App = () => {
-
-
+    const [volume, setVolume] = React.useState(50)
 
     return (
         <div className='row d-flex justify-content-center align-items-center' id='drum-machine'>
@@ -26,8 +22,8 @@ const App = () => {
                 <div id='display' className='bg-light'>
                     Snare Drum!
                 </div>
-                <label for="volume" className="form-label">Volume</label>
-                <input type="range" className="form-range" min="0" max="1" id="volume"></input>
+                <label for="volume" className="form-label">Volume - {volume}</label>
+                <input type="range" className="form-range" min="0" max="100" step='0.02' id="volume" onChange={event => setVolume(event.target.value)}></input>
             </div>
             <div className='col-6'>
                 <div className='row gap-2 d-flex justify-content-center align-items-center p-1'>

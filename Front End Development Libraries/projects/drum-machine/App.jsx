@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import './style.css';
 
 const drumSamples = [
@@ -14,24 +14,19 @@ const drumSamples = [
 ]
 
 const App = () => {
-    const [volume, setVolume] = React.useState(50)
+    const [volume, setVolume] = React.useState(.5)
+    const [label, setLabel] = React.useState('Play Something!')
 
     return (
         <div className='row d-flex justify-content-center align-items-center' id='drum-machine'>
             <div className='col-6'>
-                <div id='display' className='bg-light'>
-                    Snare Drum!
-                </div>
-                <label for="volume" className="form-label">Volume - {volume}</label>
-                <input type="range" className="form-range" min="0" max="100" step='0.02' id="volume" onChange={event => setVolume(event.target.value)}></input>
+                <Display label={label} volume={volume} setVolume={setVolume}/>
             </div>
             <div className='col-6'>
                 <div className='row gap-2 d-flex justify-content-center align-items-center p-1'>
-                    {drumSamples.map(item => {
-                        return (<button className='drum-pad btn btn-primary col-3 p-2'  type='button' id={item.id}>
-                            {item.id}
-                        </button>);
-                    })}
+                {drumSamples.map((item) => (
+                      <Drumpad drumSample={item} volume={volume} setLabel={setLabel} />
+                    ))}
                 </div>
             </div>
         </div>
@@ -39,6 +34,34 @@ const App = () => {
 }
 
 export default App
+
+const Display = ({ label, volume, setVolume }) => {
+    return (
+        <div>
+            <div id='display' className='bg-light'>
+              {label}
+            </div>
+            <label for="volume" className="form-label">Volume: {volume}</label>
+            <input type="range" className="form-range" min="0" max="1.0" step='0.02' id="volume" onChange={event => setVolume(event.target.value)}></input>
+        </div>
+    )
+}
+
+const Drumpad = ({ drumSample, volume, setLabel }) => {
+    const ref = React.useRef();
+    const playAudio = (current) => {
+        setLabel(ref.current.id);
+        ref.current.volume = volume;
+        ref.current.play();
+    }
+
+    return (
+        <button className='drum-pad btn btn-primary col-3 p-2' type='button' id={drumSample.label} onClick={() => playAudio(ref)}>
+            {drumSample.id}
+            <audio src={drumSample.fileURL} ref={ref} volume={volume} id={drumSample.label}/>
+        </button>
+    )
+}
 
 
 

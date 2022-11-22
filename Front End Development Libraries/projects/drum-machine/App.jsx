@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import './style.css';
 
 const drumSamples = [
     {key: 'Q', label: 'Heater 1', fileURL: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-1.mp3' },

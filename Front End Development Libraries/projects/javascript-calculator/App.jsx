@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 const App = () => {
     const [displayValue, setDisplayValue] = useState('Hello');
-    const [equationValue, setEquationValue] = useState(['1', '+', '2']);
+    const [equationValue, setEquationValue] = useState([]);
 
     return (
         <div className='row'>
@@ -16,7 +16,7 @@ const App = () => {
 const Display = ({ equationValue, displayValue }) => {
 
     return (
-        <div className='row gap-1'>
+        <div className='row gap-1' id='display'>
             <div className='row'>
                 {equationValue}
             </div>
@@ -32,7 +32,7 @@ const BtnPad = ({ equationValue, setEquationValue, setDisplayValue }) => {
     const handleClick = (btnValue) => {
         if(btnValue === 'clear') {
             setEquationValue([])
-            setDisplayValue('You reset this bitch')
+            setDisplayValue(0)
         } else {
             setEquationValue([...equationValue, btnValue])
             setDisplayValue(btnValue)
@@ -43,12 +43,12 @@ const BtnPad = ({ equationValue, setEquationValue, setDisplayValue }) => {
         <div className='row'>
             <div className='row g-0'>
                 <div className='d-grid col-6 p-1'>
-                    <button id='AC' className='btn btn-primary p-2' onClick={() => handleClick('clear')} type='button'>
+                    <button id='clear' className='btn btn-primary p-2' onClick={() => handleClick('clear')} type='button'>
                         AC
                     </button>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='slash' className='btn btn-primary p-2' onClick={() => handleClick('/')} type='button'>
+                    <button id='divide' className='btn btn-primary p-2' onClick={() => handleClick('/')} type='button'>
                         /
                     </button>
                 </div>
@@ -60,44 +60,44 @@ const BtnPad = ({ equationValue, setEquationValue, setDisplayValue }) => {
             </div>
             <div className='row g-0'>
                 <div className='d-grid col-3 p-1'>
-                    <button id='7' className='btn btn-primary p-2' onClick={() => handleClick('7')} type='button'>
+                    <button id='seven' className='btn btn-primary p-2' onClick={() => handleClick('7')} type='button'>
                         7
                     </button>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='8' className='btn btn-primary p-2' onClick={() => handleClick('8')} type='button'>
+                    <button id='eight' className='btn btn-primary p-2' onClick={() => handleClick('8')} type='button'>
                         8
                     </button>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='9' className='btn btn-primary p-2' onClick={() => handleClick('9')} type='button'>
+                    <button id='nine' className='btn btn-primary p-2' onClick={() => handleClick('9')} type='button'>
                         9
                     </button>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='minus' className='btn btn-primary p-2' onClick={() => handleClick('-')} type='button'>
+                    <button id='subtract' className='btn btn-primary p-2' onClick={() => handleClick('-')} type='button'>
                         -
                     </button>
                 </div>
             </div>
             <div className='row g-0'>
                 <div className='d-grid col-3 p-1'>
-                    <button id='4' className='btn btn-primary p-2' onClick={() => handleClick('4')} type='button'>
+                    <button id='four' className='btn btn-primary p-2' onClick={() => handleClick('4')} type='button'>
                         4
                     </button>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='5' className='btn btn-primary p-2' onClick={() => handleClick('5')} type='button'>
+                    <button id='five' className='btn btn-primary p-2' onClick={() => handleClick('5')} type='button'>
                         5
                     </button>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='6' className='btn btn-primary p-2' onClick={() => handleClick('6')} type='button'>
+                    <button id='six' className='btn btn-primary p-2' onClick={() => handleClick('6')} type='button'>
                         6
                     </button>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='addition' className='btn btn-primary p-2' onClick={() => handleClick('+')} type='button'>
+                    <button id='add' className='btn btn-primary p-2' onClick={() => handleClick('+')} type='button'>
                         +
                     </button>
                 </div>
@@ -106,29 +106,29 @@ const BtnPad = ({ equationValue, setEquationValue, setDisplayValue }) => {
                 <div className='col-9'>
                     <div className='row g-0'>
                         <div className='d-grid col-4 p-1'>
-                            <button id='1' className='btn btn-primary p-2' onClick={() => handleClick('1')} type='button'>
+                            <button id='one' className='btn btn-primary p-2' onClick={() => handleClick('1')} type='button'>
                                 1
                             </button>
                         </div>
                         <div className='d-grid col-4 p-1'>
-                            <button id='2' className='btn btn-primary p-2' onClick={() => handleClick('2')} type='button'>
+                            <button id='two' className='btn btn-primary p-2' onClick={() => handleClick('2')} type='button'>
                                 2
                             </button>
                         </div>
                         <div className='d-grid col-4 p-1'>
-                            <button id='3' className='btn btn-primary p-2' onClick={() => handleClick('3')} type='button'>
+                            <button id='three' className='btn btn-primary p-2' onClick={() => handleClick('3')} type='button'>
                                 3
                             </button>
                         </div>
                     </div>
                     <div className='row g-0'>
                         <div className='d-grid col-8 p-1'>
-                            <button id='0' className='btn btn-primary p-2' onClick={() => handleClick('0')} type='button'>
+                            <button id='zero' className='btn btn-primary p-2' onClick={() => handleClick('0')} type='button'>
                                 0
                             </button>
                         </div>
                         <div className='d-grid col-4 p-1'>
-                            <button id='dot' className='btn btn-primary p-2' onClick={() => handleClick('.')} type='button'>
+                            <button id='decimal' className='btn btn-primary p-2' onClick={() => handleClick('.')} type='button'>
                                 .
                             </button>
                         </div>

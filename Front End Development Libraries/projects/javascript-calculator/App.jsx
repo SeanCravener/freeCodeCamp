@@ -39,6 +39,20 @@ const BtnPad = ({ equationValue, setEquationValue, setDisplayValue }) => {
         }
     }
 
+    const handleEquals = () => {
+        // deal with the equal sign calculation seperatly than handleClick
+        // trim end if it has an operator to calculate smoother?
+        const answer = 0;
+
+        if(equationValue.length < 1) {
+            answer = calculate(equationValue)
+            setDisplayValue(answer)
+        } else {
+
+        }
+        
+    }
+
     return (
         <div className='row'>
             <div className='row g-0'>
@@ -144,4 +158,44 @@ const BtnPad = ({ equationValue, setEquationValue, setDisplayValue }) => {
     )
 }
 
+const calculate = (equationValue) => {
+    // Maybe start by looping through expression array looking for multiply or divide, 
+    // if found, replace first numerator with calculation and remove operator along with second numerator
+    // After first loop, take the same array and do another loop looking for addition or subtraction,
+    // if found, replace first numerator with calculation and remove operator along with second numerator
+
+    // Need a isOperator check for more than one in a row, maybe a isNegative too, 
+    
+}
+
+const isOperator = (operator) => {
+    switch (operator) {
+        case '/': 
+            return true;
+        case 'x':
+            return true;
+        case '+':
+            return true;
+        case '-':
+            return true;
+        default:
+            return false;
+    }
+}
+
+const isNegative = (negative) => {
+    if (negative === '-') {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+const isDecimal = (decimal) => {
+    if (decimal === '.') {
+        return true;
+    } else {
+        return false;
+    }
+}
 export default App

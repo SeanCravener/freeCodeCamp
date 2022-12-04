@@ -30,13 +30,71 @@ const Display = ({ equationValue, displayValue }) => {
 const BtnPad = ({ equationValue, setEquationValue, setDisplayValue }) => {
 
     const handleClick = (btnValue) => {
+
         if(btnValue === 'clear') {
             setEquationValue([])
             setDisplayValue(0)
         } else {
-            setEquationValue([...equationValue, btnValue])
-            setDisplayValue(btnValue)
+            // setEquationValue([...equationValue, btnValue])
+            // setDisplayValue(btnValue)
+            // Above is original to test with
+
+            // Below is a first draft attempt to handle input correctly so it can be fed to calculate() in a simply way
+            if (equationValue.length === 0) {
+                
+                // The if statement below makes sure the beginning of the formula does not contain leading zeros or any operaters except for a minus
+                if (isOperator(btnValue) && !isNegative(btnValue) && btnValue != 0) {
+                    return; //make sure this doesn't just break from current if statement, but the whole thing
+                } else {
+                    setEquationValue([btnValue])
+                    return;
+                }
+            
+            } else {
+
+                // Seperates how input is handled depending on if btnvalue is an operater or number/negative/decimal
+                if (isOperator(btnValue)) {
+
+                // If statement to check for consecutive operaters in formula.
+                // if the last item is an operater, the btnValue replaces the last item in equationValue
+                // Checks if last item added to equationValue is an operater.
+                    if (isOperator(equationValue[equationValue.length - 1])){
+                        
+                        // Minus/Negative need to be handled by if statement since they are same action
+                        if (isNegative(btnValue)){
+
+                            // Thinking double minues/negatives might cause a third to throw an error or something.
+                            // the if statement below tests for this, hopefully
+                            if (isNegative(equationValue[equationValue.length - 2])) {
+                                return;
+                            } else {
+                                setEquationValue([...equationValue, btnValue]);
+                                return;
+                            }
+
+                        } else {
+
+                            // NEEDS TESTED. If the last item and current item are both operaters.
+                            // this statement below should take off the last itme/operater
+                            // and replace it with new operater/btnValue
+                            // Look into easier way to replace items in array
+                            let tempEq = [...equationValue]
+                            tempEq.splice((tempEq.length - 1), 1)
+                            setEquationValue([...tempEq, btnValue])
+                            return;
+                        }
+                    } else {
+                        setEquationValue([...equationValue, btnValue])
+                    }
+                
+                } else {
+
+                    
+                }
+
+            }
         }
+    
     }
 
     const handleEquals = () => {

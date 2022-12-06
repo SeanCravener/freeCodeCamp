@@ -1,3 +1,5 @@
+
+
 import React, { useState } from "react";
 
 
@@ -92,86 +94,72 @@ const BtnPad = ({ equationValue, setEquationValue, displayValue, setDisplayValue
         }
     }
 
-    const handleEquals = () => {
+    const handleEquals = (equation) => {
 
+        // if (isOperator(equation[equation.length - 1])) {
+        //     equation.pop()
+        // }
+    
         if (!isOperator(displayValue) && displayValue !== '0' && displayValue !== '.') {
             setEquationValue([...equationValue, displayValue])
+            equation.push(displayValue)
         }
-
-        if (isOperator(equationValue[equationValue.length - 1])) {
-            const itemRemove = [...equationValue]
-            itemRemove.pop()
-            setEquationValue([...itemRemove])
-        }
-
-        if (equationValue.length > 2) {
-            const answer = calculate([...equationValue])
-
-            console.log(answer)
-            setDisplayValue(answer)
+    
+        if (equation.length < 3) {
             return
         } else {
-            return
+            console.log(equation)
+            setDisplayValue(calculate(equation))
         }
-
     }
 
     const calculate = (equation) => {
+        let i = 1
 
-        let answer = ''
-
-        // Loop checking for multiplication and division
-        for (let i = 0; i < equation.length; i++) {
-
-            console.log(equation[i])
-            const x = equation[i]
-            const y = equation[(i + 2)]
-
-            switch (equation[i + 1]) {
-
-                
-                case '*':
-                
-                    equation.splice((x), 3, eval((x + ' * ' + y)))
-                    break;
-
-             
-             
-                    case '/':
-        
-                    equation.splice((x), 3, eval((x + ' / ' + y)))
-                    break;
-
-                default:
-                    break;
+        const isInArray = (opOne, opTwo) => {
+            if (equation.indexOf(opOne) === -1 && equation.indexOf(opTwo) === -1) {
+                return false
+            } else {
+                return true
             }
         }
 
-        // Loop checking for addition or subtraction
-        for (let i = 0; i < equation.length ;) {
-
+        while (isInArray('*', '/')) {
+            let item = equation[i]
             console.log(equation[i])
-            const x = equation[i]
-            const y = equation[(i + 2)]
 
-            switch (equation[(i+1)]) {
-                
-                case '+':
-                    equation.splice((x), 3, eval((x + ' + ' + y)))
+            switch (item) {
+                case '*':
+                    equation.splice((i - 1), 3, (equation[i - 1] * equation[i + 1]))
                     break;
-             
-                case '-':
-                    equation.splice((x), 3, eval((x + ' - ' + y)))
+                case '/':
+                    equation.splice((i - 1), 3, (equation[i - 1] / equation[i + 1]))
                     break;
-
                 default:
-                    i = i + 2
-
-                    break;
+                    index++
             }
+
+        }
+
+        while (isInArray('+', '-')) {
+            let item = equation[i]
+            console.log(equation[i])
+
+            switch (item) {
+                case '+':
+                    equation.splice((i - 1), 3, (new Number(equation[i - 1]) + new Number(equation[i + 1])))
+                    break;
+                case '-':
+                    equation.splice((i - 1), 3, (equation[i - 1] - equation[i + 1]))
+                    break;
+                default:
+                    index++
+            }
+
         }
 
         return equation[0]
+
     }
 
     const isOperator = (operator) => {
@@ -285,7 +273,7 @@ const BtnPad = ({ equationValue, setEquationValue, displayValue, setDisplayValue
                     </div>
                 </div>
                 <div className='d-grid col-3 p-1'>
-                    <button id='equals' className='btn btn-primary p-2' onClick={() => handleEquals()} type='button'>
+                    <button id='equals' className='btn btn-primary p-2' onClick={() => handleEquals([...equationValue])} type='button'>
                         =
                     </button>
                 </div>

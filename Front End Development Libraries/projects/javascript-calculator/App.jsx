@@ -1,16 +1,20 @@
-
-
 import React, { useState } from "react";
-
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './style.css'
 
 const App = () => {
-    const [displayValue, setDisplayValue] = useState('Hello');
+    const [displayValue, setDisplayValue] = useState('0');
     const [equationValue, setEquationValue] = useState([]);
 
     return (
-        <div className='row'>
-            <Display equationValue={equationValue} displayValue={displayValue} />
-            <BtnPad equationValue={equationValue} setEquationValue={setEquationValue} displayValue={displayValue} setDisplayValue={setDisplayValue} />
+        <div>
+            <div className='container main p-1 bg-primary rounded'>
+                <Display equationValue={equationValue} displayValue={displayValue} />
+                <BtnPad equationValue={equationValue} setEquationValue={setEquationValue} displayValue={displayValue} setDisplayValue={setDisplayValue} />
+            </div>
+            <span className='text-center d-block p-1 contact-text'>Javascript Calculator made with React & Bootstrap</span>
+            <span className='text-center d-block p-1 contact-text'>Coded and Designed by Sean Cravener</span>
+            <span className='text-center d-block p-1 contact-text'>Check me out! <a href='https://github.com/SeanCravener'>Github</a> <a href='https://codepen.io/Beelzeboss92'>Codepen</a> <a href='https://twitter.com/SeansTheCoolest'>Twitter</a></span>
         </div>
     )
 }
@@ -18,12 +22,12 @@ const App = () => {
 const Display = ({ equationValue, displayValue }) => {
 
     return (
-        <div className='row gap-1' id='display'>
-            <div className='row'>
-                {equationValue}
+        <div className='row text-end p-3' id='display'>
+            <div className='col-12 p-1 bg-light rounded-top'>
+                <span className='display-text'>{equationValue}</span>
             </div>
-            <div className='row'>
-                {displayValue}
+            <div className='col-12 p-1 bg-light rounded-bottom'>
+                <span className='display-text'>{displayValue}</span>
             </div>
         </div>
     )
@@ -38,7 +42,13 @@ const BtnPad = ({ equationValue, setEquationValue, displayValue, setDisplayValue
     }
 
     const handleNumber = (btnValue) => {
-        // adds last input to array if it was an operator, checks for negative too
+ 
+        // Checks if number is going to be negative 
+        if (displayValue === '-' && isOperator(equationValue[equationValue.length - 1])) {
+            setDisplayValue(displayValue + btnValue)
+            return
+        }
+
         if (isOperator(displayValue)) {
             if (btnValue === '0') {
                 return;
@@ -96,25 +106,23 @@ const BtnPad = ({ equationValue, setEquationValue, displayValue, setDisplayValue
 
     const handleEquals = (equation) => {
 
-        // if (isOperator(equation[equation.length - 1])) {
-        //     equation.pop()
-        // }
-    
         if (!isOperator(displayValue) && displayValue !== '0' && displayValue !== '.') {
             setEquationValue([...equationValue, displayValue])
             equation.push(displayValue)
         }
-    
+
         if (equation.length < 3) {
             return
         } else {
             console.log(equation)
-            setDisplayValue(calculate(equation))
+            const answer = calculate(equation)
+            setDisplayValue(answer)
+            setEquationValue([])
         }
     }
 
     const calculate = (equation) => {
-        let i = 1
+        let i = 0
 
         const isInArray = (opOne, opTwo) => {
             if (equation.indexOf(opOne) === -1 && equation.indexOf(opTwo) === -1) {
@@ -124,42 +132,50 @@ const BtnPad = ({ equationValue, setEquationValue, displayValue, setDisplayValue
             }
         }
 
-        while (isInArray('*', '/')) {
+        // Loops through array until no more multiplication/division operators are found
+        while (isInArray('x', '/')) {
             let item = equation[i]
-            console.log(equation[i])
+            console.log(equation)
 
             switch (item) {
-                case '*':
+                case 'x':
                     equation.splice((i - 1), 3, (equation[i - 1] * equation[i + 1]))
+                    console.log(equation)
                     break;
                 case '/':
                     equation.splice((i - 1), 3, (equation[i - 1] / equation[i + 1]))
+                    console.log(equation)
                     break;
                 default:
-                    index++
+                    i++
+                    break;
             }
 
         }
 
+        // Loops through array until no more multiplication/division operators are found
+        i = 0;
         while (isInArray('+', '-')) {
             let item = equation[i]
-            console.log(equation[i])
+            console.log(equation)
 
             switch (item) {
                 case '+':
                     equation.splice((i - 1), 3, (new Number(equation[i - 1]) + new Number(equation[i + 1])))
+                    console.log(equation)
                     break;
                 case '-':
                     equation.splice((i - 1), 3, (equation[i - 1] - equation[i + 1]))
+                    console.log(equation)
                     break;
                 default:
-                    index++
+                    i++
+                    break;
             }
 
         }
 
         return equation[0]
-
     }
 
     const isOperator = (operator) => {
@@ -178,7 +194,7 @@ const BtnPad = ({ equationValue, setEquationValue, displayValue, setDisplayValue
     }
 
     return (
-        <div className='row'>
+        <div className='p-1'>
             <div className='row g-0'>
                 <div className='d-grid col-6 p-1'>
                     <button id='clear' className='btn btn-primary p-2' onClick={() => handleClear()} type='button'>

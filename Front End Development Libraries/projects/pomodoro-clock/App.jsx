@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlay, faArrowDown, faArrowUp, faArrowsRotate, faPause} from '@fortawesome/free-solid-svg-icons'
 
 const INI_BREAK = 5
 const INI_SESSION = 25
@@ -42,7 +43,7 @@ const App = () => {
                     <div className='row'>
                         <div className='col-4' id='break-decrement'>
                             <button onClick={() => setBreakL(decrement(breakL))} type='button'>
-                            <FontAwesomeIcon icon="fa-solid fa-circle-down" />
+                            <FontAwesomeIcon icon={faArrowDown} />
                             </button>
                         </div>
                         <div className='col-4' id='break-length'>
@@ -50,7 +51,7 @@ const App = () => {
                         </div>
                         <div className='col-4' id='break-increment'>
                         <button onClick={() => setBreakL(increment(breakL))} type='button'>
-                            <FontAwesomeIcon icon="fa-solid fa-circle-up" />
+                            <FontAwesomeIcon icon={faArrowUp} />
                             </button>
                         </div>
                     </div>
@@ -63,7 +64,7 @@ const App = () => {
                         <div className='col-4' id='session-decrement'>
                         <button className='btn btn-primary' onClick={() => setSessionL(decrement(sessionL))} type='button'>
 
-                            {/* <FontAwesomeIcon icon="fa-solid fa-circle-down" /> */}
+                            <FontAwesomeIcon icon={faArrowDown} />
                             </button>
                         </div>
                         <div className='col-4' id='session-length'>
@@ -71,7 +72,7 @@ const App = () => {
                         </div>
                         <div className='col-4' id='session-increment'>
                         <button onClick={() => setSessionL(increment(sessionL))} type='button'>
-                            {/* <FontAwesomeIcon icon="fa-solid fa-circle-up" /> */}
+                            <FontAwesomeIcon icon={faArrowUp} />
                             </button>
                         </div>
                     </div>
@@ -83,6 +84,26 @@ const App = () => {
 }
 
 const Timer = ({breakTimer, sessionTimer}) => {
+    // const [paused, setPaused] = useState(true);
+
+    // useEffect(() => {
+    //     let timerId;
+    //     if (!paused) {
+    //       timerId = setInterval(() => {
+    //         setDuration((prev) => prev - 1);
+    //       }, 1000);
+    //       console.log(timerId);
+    //     }
+    
+    //     return function cleanup() {
+    //       console.log(`Clearing ${timerId}`);
+    //       clearInterval(timerId);
+    //     };
+    //   }, [paused]);
+    
+    //   const handleClick = (e) => {
+    //     !paused ? setPaused(true) : setPaused(false);
+    //   };
 
 
     return (
@@ -104,13 +125,13 @@ const Timer = ({breakTimer, sessionTimer}) => {
                 </div>
                 <div className='row'>
                     <div className='col-4' id='start_stop'>
-                        {/* <FontAwesomeIcon icon="fa-solid fa-circle-play" /> */}
+                        <FontAwesomeIcon icon={faPlay} />
                     </div>
                     <div className='col-4' id='start_stop'>
-                        {/* <FontAwesomeIcon icon="fa-solid fa-circle-pause" /> */}
+                        <FontAwesomeIcon icon={faPause} />
                     </div>
                     <div className='col-4' id='reset'>
-                        {/* <FontAwesomeIcon icon="fa-solid fa-arrows-rotate" /> */}
+                        <FontAwesomeIcon icon={faArrowsRotate} />
                     </div>
                 </div>
             </div>

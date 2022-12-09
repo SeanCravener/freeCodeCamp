@@ -3,8 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlay, faArrowDown, faArrowUp, faArrowsRotate, faPause} from '@fortawesome/free-solid-svg-icons'
 
-const INI_BREAK = 5
-const INI_SESSION = 25
+const INI_BREAK = 1
+const INI_SESSION = 1
 
 const App = () => {
     const [breakL, setBreakL] = useState(INI_BREAK)
@@ -84,27 +84,50 @@ const App = () => {
 }
 
 const Timer = ({breakTimer, sessionTimer}) => {
-    // const [paused, setPaused] = useState(true);
+    const [duration, setDuration] = useState(sessionTimer * 60)
+    const [label, setLabel] = useState('Work')
+    const [playing, setPlaying] = useState(false)
 
-    // useEffect(() => {
-    //     let timerId;
-    //     if (!paused) {
-    //       timerId = setInterval(() => {
-    //         setDuration((prev) => prev - 1);
-    //       }, 1000);
-    //       console.log(timerId);
-    //     }
+    const onFinish = () => {
+        if (label === 'Work') {
+            setLabel('Break')
+            setDuration(breakTimer * 60)
+        } else {
+            setLabel('Work')
+            setDuration(sessionTimer * 60)
+        }
+    }
     
-    //     return function cleanup() {
-    //       console.log(`Clearing ${timerId}`);
-    //       clearInterval(timerId);
-    //     };
-    //   }, [paused]);
-    
-    //   const handleClick = (e) => {
-    //     !paused ? setPaused(true) : setPaused(false);
-    //   };
+    useEffect(() => {
+        // Return early if we reach 0
+        if(duration === 0 ) return;
 
+        if(playing) {
+        const timerId = setInterval(() => {
+            setDuration(duration - 1);
+        }, 1000);
+        
+
+        return () => clearInterval(timerId)
+    } else {
+            return;
+        }
+    }, [duration, playing]);
+
+    useEffect(() => {
+        if (duration === 0) {
+            onFinish()
+        }
+    }, [duration, onFinish]);
+
+    const reset = () => {
+        setDuration(sessionTimer * 60)
+        setLabel('Work')
+        setPlaying(false)
+    }
+
+    const minutesLeft = Math.floor(duration / 60)
+    const secondsLeft = duration % 60
 
     return (
         <div className='row'>
@@ -113,25 +136,23 @@ const Timer = ({breakTimer, sessionTimer}) => {
                     <div className='col-12'>
                         <div className='row'>
                             <div className='col-12' id='timer-label'>
-                                {breakTimer}
+                                {label}
                             </div>
-                        </div>
-                        <div className='row'>
                             <div className='col-12' id='time-left'>
-                                {sessionTimer}
+                                {minutesLeft}:{secondsLeft}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className='row'>
                     <div className='col-4' id='start_stop'>
-                        <FontAwesomeIcon icon={faPlay} />
+                        <FontAwesomeIcon icon={faPlay} onClick={() => setPlaying(true)}/>
                     </div>
                     <div className='col-4' id='start_stop'>
-                        <FontAwesomeIcon icon={faPause} />
+                        <FontAwesomeIcon icon={faPause} onClick={() => setPlaying(false)}/>
                     </div>
                     <div className='col-4' id='reset'>
-                        <FontAwesomeIcon icon={faArrowsRotate} />
+                        <FontAwesomeIcon icon={faArrowsRotate} onClick={() => reset()}/>
                     </div>
                 </div>
             </div>

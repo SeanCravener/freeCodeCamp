@@ -1,159 +1,188 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlay, faArrowDown, faArrowUp, faArrowsRotate, faPause} from '@fortawesome/free-solid-svg-icons'
+import { faPlay, faArrowDown, faArrowUp, faArrowsRotate, faPause } from '@fortawesome/free-solid-svg-icons'
 
-const INI_BREAK = 1
-const INI_SESSION = 1
+const RESET_BREAK = 5
+const RESET_WORK = 25
 
 const App = () => {
-    const [breakL, setBreakL] = useState(INI_BREAK)
-    const [sessionL, setSessionL] = useState(INI_SESSION)
+    const [breakTime, setBreakTime] = useState(RESET_BREAK)
+    const [workTime, setWorkTime] = useState(RESET_WORK)
+    const [label, setLabel] = useState('Work')
+    const [duration, setDuration] = useState(workTime * 60)
+    const [playing, setPlaying] = useState(false)
 
-    const increment = (incrementNum) => {
-        incrementNum += 1
-        if(incrementNum <= 0 || incrementNum > 60) {
-            return
+    const beepSound = new Audio('https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav')
+
+
+    const handleFinish = () => {
+        beepSound.play()
+
+        if (label === 'Work') {
+            setLabel('Break')
+            setDuration(breakTime * 60)
+
+
+        } else {
+            setLabel('Work')
+            setDuration(workTime * 60)
         }
-        return incrementNum
     }
 
-    const decrement = (decrementNum) => {
-        decrementNum -= 1
-        if(decrementNum <= 0 || decrementNum > 60) {
+    const reset = () => {
+        beepSound.pause()
+        beepSound.currentTime = 0
+        setPlaying(false)
+        setBreakTime(RESET_BREAK)
+        setWorkTime(RESET_WORK)
+        setDuration(RESET_WORK * 60)
+        setLabel('Work')
+    }
+
+    const increment = (workBreak) => {
+
+
+        if (workBreak === 'Work') {
+            const num = workTime + 1
+            if (num <= 0 || num > 60) {
+                return
+            }
+                setWorkTime(num)
+        } else {
+            const num = breakTime + 1
+            if (num <= 0 || num > 60) {
+                return
+            }
+                setBreakTime(num)
+        }
+    }
+
+    const decrement = (workBreak) => {
+
+        if (workBreak === 'Work') {
+            const num = workTime - 1
+            if (num <= 0 || num > 60) {
+                return
+            }
+                setWorkTime(num)
+        } else {
+            const num = breakTime - 1
+            if (num <= 0 || num > 60) {
+                return
+            }
+                setBreakTime(num)
+        }
+    }
+
+    useEffect(() => {
+
+        if (playing) {
+            // Return early if we reach 0
+
+            if (duration === 0) return
+
+            const timerId = setInterval(() => {
+                setDuration(duration - 1)
+            }, 1000)
+
+            return () => clearInterval(timerId)
+        } else {
             return
         }
-        return decrementNum
-    }
+
+    }, [duration, playing])
+
+    useEffect(() => {
+        if (duration === 0) {
+            handleFinish()
+        }
+    }, [duration])
+
+    useEffect(() => {
+        if (!playing && label != 'Break') {
+            setDuration(workTime * 60)
+        }
+
+    }, [workTime]) 
+
+
+
+    const minutes = Math.floor(duration / 60)
+    const seconds = duration % 60
 
     return (
         <div className='container'>
-            <div className='row'>
-                <span className='fs-2'>
+            <div id='row'>
+                <div>
                     25 + 5 Clock
-                </span>
+                </div>
             </div>
             <div className='row'>
                 <div className='col-6'>
                     <div className='row'>
-                        <div className='col-12 fs-3' id='break-label'>
+                        <div className='col-12 fs-3' id={'break-label'}>
                             Break Length
                         </div>
                     </div>
                     <div className='row'>
-                        <div className='col-4' id='break-decrement'>
-                            <button onClick={() => setBreakL(decrement(breakL))} type='button'>
-                            <FontAwesomeIcon icon={faArrowDown} />
+                        <div className='col-4' id={'break-decrement'}>
+                            <button disabled={playing} onClick={() => decrement('Break')} type='button'>
+                                <FontAwesomeIcon icon={faArrowDown} />
                             </button>
                         </div>
-                        <div className='col-4' id='break-length'>
-                            {breakL}
+                        <div className='col-4' id={'break-length'}>
+                            {breakTime}
                         </div>
-                        <div className='col-4' id='break-increment'>
-                        <button onClick={() => setBreakL(increment(breakL))} type='button'>
-                            <FontAwesomeIcon icon={faArrowUp} />
+                        <div className='col-4' id={'break-increment'}>
+                            <button disabled={playing} onClick={() => increment('Break')} type='button'>
+                                <FontAwesomeIcon icon={faArrowUp} />
                             </button>
                         </div>
                     </div>
                 </div>
                 <div className='col-6'>
-                    <span id='session-label' className='fs-3'>
-                        Session Length
-                    </span>
                     <div className='row'>
-                        <div className='col-4' id='session-decrement'>
-                        <button className='btn btn-primary' onClick={() => setSessionL(decrement(sessionL))} type='button'>
-
-                            <FontAwesomeIcon icon={faArrowDown} />
+                        <div className='col-12 fs-3' id={'work-label'}>
+                            Work Length
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-4' id={'work-decrement'}>
+                            <button disabled={playing} onClick={() => decrement('Work')} type='button'>
+                                <FontAwesomeIcon icon={faArrowDown} />
                             </button>
                         </div>
-                        <div className='col-4' id='session-length'>
-                            {sessionL}
+                        <div className='col-4' id={'work-length'}>
+                            {workTime}
                         </div>
-                        <div className='col-4' id='session-increment'>
-                        <button onClick={() => setSessionL(increment(sessionL))} type='button'>
-                            <FontAwesomeIcon icon={faArrowUp} />
+                        <div className='col-4' id={'work-increment'}>
+                            <button disabled={playing} onClick={() => increment('Work')} type='button'>
+                                <FontAwesomeIcon icon={faArrowUp} />
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            <Timer breakTimer={breakL} sessionTimer={sessionL} />
-        </div>
-    )
-}
-
-const Timer = ({breakTimer, sessionTimer}) => {
-    const [duration, setDuration] = useState(sessionTimer * 60)
-    const [label, setLabel] = useState('Work')
-    const [playing, setPlaying] = useState(false)
-
-    const onFinish = () => {
-        if (label === 'Work') {
-            setLabel('Break')
-            setDuration(breakTimer * 60)
-        } else {
-            setLabel('Work')
-            setDuration(sessionTimer * 60)
-        }
-    }
-    
-    useEffect(() => {
-        // Return early if we reach 0
-        if(duration === 0 ) return;
-
-        if(playing) {
-        const timerId = setInterval(() => {
-            setDuration(duration - 1);
-        }, 1000);
-        
-
-        return () => clearInterval(timerId)
-    } else {
-            return;
-        }
-    }, [duration, playing]);
-
-    useEffect(() => {
-        if (duration === 0) {
-            onFinish()
-        }
-    }, [duration, onFinish]);
-
-    const reset = () => {
-        setDuration(sessionTimer * 60)
-        setLabel('Work')
-        setPlaying(false)
-    }
-
-    const minutesLeft = Math.floor(duration / 60)
-    const secondsLeft = duration % 60
-
-    return (
-        <div className='row'>
-            <div className='col-12'>
-                <div className='row'>
-                    <div className='col-12'>
-                        <div className='row'>
-                            <div className='col-12' id='timer-label'>
-                                {label}
-                            </div>
-                            <div className='col-12' id='time-left'>
-                                {minutesLeft}:{secondsLeft}
-                            </div>
-                        </div>
+            <div className='row'>
+                <div className='col-12'>
+                    {label}
+                </div>
+                <div className='col-12'>
+                    <div>
+                        {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
                     </div>
                 </div>
-                <div className='row'>
-                    <div className='col-4' id='start_stop'>
-                        <FontAwesomeIcon icon={faPlay} onClick={() => setPlaying(true)}/>
-                    </div>
-                    <div className='col-4' id='start_stop'>
-                        <FontAwesomeIcon icon={faPause} onClick={() => setPlaying(false)}/>
-                    </div>
-                    <div className='col-4' id='reset'>
-                        <FontAwesomeIcon icon={faArrowsRotate} onClick={() => reset()}/>
-                    </div>
+            </div>
+            <div className='row'>
+                <div className='col-4' id='start_stop'>
+                    <FontAwesomeIcon icon={faPlay} onClick={() => setPlaying(true)} />
+                </div>
+                <div className='col-4' id='start_stop'>
+                    <FontAwesomeIcon icon={faPause} onClick={() => setPlaying(false)} />
+                </div>
+                <div className='col-4' id='reset'>
+                    <FontAwesomeIcon icon={faArrowsRotate} onClick={() => reset()} />
                 </div>
             </div>
         </div>

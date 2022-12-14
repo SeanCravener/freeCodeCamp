@@ -17,7 +17,8 @@ const App = () => {
 
 
     const handleFinish = () => {
-        beepSound.play()
+        const beep = document.getElementById('beep')
+        beep.play()
 
         if (label === 'Work') {
             setLabel('Break')
@@ -31,8 +32,9 @@ const App = () => {
     }
 
     const reset = () => {
-        beepSound.pause()
-        beepSound.currentTime = 0
+        const beep = document.getElementById('beep')
+        beep.pause()
+        beep.currentTime = 0
         setPlaying(false)
         setBreakTime(RESET_BREAK)
         setWorkTime(RESET_WORK)
@@ -49,12 +51,14 @@ const App = () => {
                 return
             }
                 setWorkTime(num)
+                return
         } else {
             const num = breakTime + 1
             if (num <= 0 || num > 60) {
                 return
             }
                 setBreakTime(num)
+                return
         }
     }
 
@@ -66,19 +70,20 @@ const App = () => {
                 return
             }
                 setWorkTime(num)
+                return
         } else {
             const num = breakTime - 1
             if (num <= 0 || num > 60) {
                 return
             }
                 setBreakTime(num)
+                return
         }
     }
 
     useEffect(() => {
 
         if (playing) {
-            // Return early if we reach 0
 
             if (duration === 0) return
 
@@ -113,6 +118,7 @@ const App = () => {
 
     return (
         <div className='container'>
+            <audio src='https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav' id='beep'></audio>
             <div id='row'>
                 <div>
                     25 + 5 Clock

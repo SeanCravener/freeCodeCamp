@@ -1,34 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="styles.css" />
     <title>freeCodeCamp Survey Form</title>
   </head>
   <body>
     <h1 id="title">freeCodeCamp Survey Form</h1>
-    <p id="description">Thank you for taking the time to help us improve the platform</p>
+    <p id="description">
+      Thank you for taking the time to help us improve the platform
+    </p>
     <form id="survey-form">
+      <label id="name-label"
+        >Name<input
+          id="name"
+          type="text"
+          placeholder="Enter your name"
+          required
+      /></label>
+      <label id="email-label"
+        >Email<input
+          id="email"
+          type="email"
+          placeholder="Enter your Email"
+          required
+      /></label>
+      <label id="number-label"
+        >Age(optional)<input
+          id="number"
+          type="number"
+          min="13"
+          max="100"
+          placeholder="Age"
+      /></label>
 
-      <label id="name-label">Name<input id="name" type="text" placeholder="Enter your name" required /></label>
-      <label id="email-label">Email<input id="email" type="email" placeholder="Enter your Email" required/></label>
-      <label id="number-label">Age(optional)<input id="number" type="number" min="13" max="100" placeholder="Age" /></label>
+      <label id="dropdown-label"
+        >Which option best describes your current role?<select id="dropdown">
+          <option value="fulltime">Full Time</option>
+          <option value="parttime">Part Time</option>
+        </select></label
+      >
 
-      <label id="dropdown-label">Which option best describes your current role?<select id="dropdown">
-        <option value="fulltime">Full Time</option>
-        <option value="parttime">Part Time</option>
-      </select></label>
+      <label id="radio-label"
+        >Would you recommend freeCodeCamp to a friend?<input
+          id="radio1"
+          type="radio"
+          name="radio"
+          value="yes"
+        />Yes</label
+      >
+      <label
+        ><input id="radio2" type="radio" name="radio" value="no" />No</label
+      >
 
-      <label id="radio-label">Would you recommend freeCodeCamp to a friend?<input id="radio1" type="radio" name="radio" value="yes">Yes</label>
-      <label><input id="radio2" type="radio" name="radio" value="no">No</label>
-
-      <label id="checkbox-label">What would you like to see improved? (Check all that apply)<input id="checkbox1" type="checkbox" value="1">Challenges</label>
-      <label><input id="checkbox2" type="checkbox" value="2">Videos</label>
-      <label><input id="checkbox3" type="checkbox" value="3">Wiki</label>
+      <label id="checkbox-label"
+        >What would you like to see improved? (Check all that apply)<input
+          id="checkbox1"
+          type="checkbox"
+          value="1"
+        />Challenges</label
+      >
+      <label><input id="checkbox2" type="checkbox" value="2" />Videos</label>
+      <label><input id="checkbox3" type="checkbox" value="3" />Wiki</label>
 
       <p>Any Comments or suggestions?</p>
-      <textarea id="textarea" placeholder="Enter your comment here..."></textarea>
-      <input id="submit" type="submit">
+      <textarea
+        id="textarea"
+        placeholder="Enter your comment here..."
+      ></textarea>
+      <input id="submit" type="submit" />
     </form>
   </body>
 </html>

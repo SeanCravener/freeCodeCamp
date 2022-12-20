@@ -1,18 +1,18 @@
 main {
-    background: #eee;
-    margin: 30px 8px;
-    padding: 10px;
-    display: block;
-    text-align: center;
-  }
-  
-  ul > li {
-    text-align: left;
-    padding-bottom: 25px;
-  }
-  
-  img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-  }
+  background: #eee;
+  margin: 30px 8px;
+  padding: 10px;
+  display: block;
+  text-align: center;
+}
+
+ul > li {
+  text-align: left;
+  padding-bottom: 25px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}

@@ -10,4 +10,9 @@
 ---
 
 ## Front End Development Libraries
-1. [Random Quote Machine(made with React)](https://codepen.io/Beelzeboss92/pen/PoambgQ)
+1. [Random Quote Machine made with JavaScript and React](https://codepen.io/Beelzeboss92/pen/PoambgQ)
+2. [Markdown Previewer made with JavaScript, React, and Bootstrap](https://codepen.io/Beelzeboss92/pen/jOKwWjm)
+3. [Drum Machine made with JavaScript, React, and Bootstrap](https://codepen.io/Beelzeboss92/pen/rNKJWOV)
+4. [JavaScript Calculator made with JavaScript, React, and Bootstrap](https://codepen.io/Beelzeboss92/pen/ZERweyV)
+5. [Pomodoro (25+5) Clock made with JavaScript, React, and Bootstrap](https://codepen.io/Beelzeboss92/pen/VwdNMYa)
+---

@@ -1,47 +1,49 @@
+
 // init project
-var express = require("express");
+var express = require('express');
 var app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC
-var cors = require("cors");
-app.use(cors({ optionsSuccessStatus: 200 })); // some legacy browsers choke on 204
+// so that your API is remotely testable by FCC 
+var cors = require('cors');
+app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
+app.use(express.static('public'));
 
 // http://expressjs.com/en/starter/basic-routing.html
 app.get("/", function (req, res) {
-  res.sendFile(__dirname + "/views/index.html");
+  res.sendFile(__dirname + '/views/index.html');
 });
 
-// your first API endpoint...
+
+// your first API endpoint... 
 app.get("/api/hello", function (req, res) {
-  res.json({ greeting: "hello API" });
+  res.json({greeting: 'hello API'});
 });
 
-app.get("/api/:date?", (req, res) => {
+app.get('/api/:date?', (req, res) => {
   let dateJSON;
 
   // Checks for empty params
-  if (!req.params.date) {
+  if(!req.params.date) {
     dateJSON = new Date(Date.now());
   } else {
-    dateJSON = new Date(req.params.date);
+    dateJSON = new Date(req.params.date)
   }
 
   // isNaN checks if integer(UNIX)
   if (isNaN(dateJSON)) {
-    dateJSON = new Date(req.params.date * 1000);
-    res.json({ unix: req.params.date, utc: dateJSON.toUTCString() });
+    dateJSON = new Date(parseInt(req.params.date))
+    res.json({"unix": req.params.date, "utc": dateJSON.toUTCString()})
   } else if (dateJSON == "Invalid Date") {
-    res.json({ error: dateJSON });
-  } else {
-    res.json({ unix: dateJSON.getTime(), utc: dateJSON.toUTCString() });
-  }
-});
+      res.json({error: "Invalid Date"})
+    } else {
+      res.json({"unix": dateJSON.getTime(), "utc": dateJSON.toUTCString()})
+    }
+})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
-  console.log("Your app is listening on port " + listener.address().port);
+  console.log('Your app is listening on port ' + listener.address().port);
 });

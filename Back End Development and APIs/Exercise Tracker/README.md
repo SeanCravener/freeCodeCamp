@@ -2,7 +2,7 @@
 
 This is the boilerplate for the Exercise Tracker project. Instructions for building your project can be found at https://www.freecodecamp.org/learn/apis-and-microservices/apis-and-microservices-projects/exercise-tracker
 
-Live finished project - https://boilerplate-project-exercisetracker.beelzeboss.repl.co
+Live finished project - https://replit.com/@beelzeboss/boilerplate-project-exercisetracker
 
 ## Tests
  - You should provide your own project, not the example URL.

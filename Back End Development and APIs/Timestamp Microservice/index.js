@@ -23,24 +23,25 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get('/api/:date?', (req, res) => {
-  let dateJSON;
+  let dateIn = req.params.date;
+  let dateOut;
 
-  // Checks for empty params
-  if(!req.params.date) {
-    dateJSON = new Date(Date.now());
+  if (!req.params.date) {
+    dateOut = new Date()
   } else {
-    dateJSON = new Date(req.params.date)
+    dateOut = new Date(dateIn)
+    // Check if error NaN returned from new Date()
+    if(isNaN(dateOut)) {
+      dateOut = new Date(parseInt(dateIn));
+    }
   }
 
-  // isNaN checks if integer(UNIX)
-  if (isNaN(dateJSON)) {
-    dateJSON = new Date(parseInt(req.params.date))
-    res.json({"unix": req.params.date, "utc": dateJSON.toUTCString()})
-  } else if (dateJSON == "Invalid Date") {
-      res.json({error: "Invalid Date"})
-    } else {
-      res.json({"unix": dateJSON.getTime(), "utc": dateJSON.toUTCString()})
-    }
+  // Check if error NaN is still showing, bad Input
+  if(isNaN(dateOut)) {
+    res.json({ error: "Invalid Date" })
+  } else {
+    res.json({ unix: dateOut.getTime(), utc: dateOut.toUTCString() })
+  }
 })
 
 // listen for requests :)

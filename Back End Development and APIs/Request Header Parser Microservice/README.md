@@ -1,6 +1,8 @@
 # Request Header Parser Microservice
 
-Build a full stack JavaScript app that is functionally similar to this: https://request-header-parser-microservice.freecodecamp.rocks/. Working on this project will involve you writing your code using one of the following methods:
+This is the boilerplate for the Request Header Parser Microservice project. Instructions for building your project can be found at https://www.freecodecamp.org/learn/apis-and-microservices/apis-and-microservices-projects/request-header-parser-microservice
+
+Live project link - https://replit.com/@beelzeboss/boilerplate-project-headerparser
 
 ## Tests
 
